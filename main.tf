@@ -39,13 +39,9 @@ module "dkp-cp" {
   custom_attribute_expiration = "24h"
 }
 
-#output "dkp-cp_default_ip_address" {
-#  value = module.dkp-cp.default_ip_address
-#}
-#
-#output "dkp-cp_ssh_nat_address" {
-#  value = "${module.dkp-cp.vsphere_virtual_machine.nat_address}:${module.dkp-cp.vsphere_virtual_machine.nat_ssh_port}"
-#}
+output "dkp-cp_default_ip_address" {
+  value = [replace(join(", " , module.dkp-cp[*].default_ip_address), ",", "")]
+}
 
 module "dkp-worker" {
   source = "../modules/vmclone"
@@ -64,4 +60,8 @@ module "dkp-worker" {
   datastore_name = "users-support"
   custom_attribute_owner      = "sortega"
   custom_attribute_expiration = "24h"
+}
+
+output "dkp-worker_default_ip_address" {
+  value = [replace(join(", " , module.dkp-worker[*].default_ip_address), ",", "")]
 }
