@@ -2,21 +2,20 @@ module "bastion" {
   #source = "../modules/vmclone"
   source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
-  node_name      = "kib-ha-proxy"
-  ssh_public_key = file("~/.ssh/d2iq_templates.pub")
-
-  custom_attribute_owner      = "sortega"
-  custom_attribute_expiration = "24h"
-  ssh_user        = "sortega"
-  vsphere_network = "VMs"
-  vm_template_name = "d2iq-base-Ubuntu-20.04"
-  num_cpus        = 4
-  memory          = 8192
-  root_volume_size = 250
-  resource_pool_name = "users-support"
-  vsphere_folder     = "users/users-support"
-  datastore_name       = "users-support"
-  datastore_is_cluster = false
+  node_name                   = "kib-ha-proxy"
+  ssh_public_key              = file("~/.ssh/d2iq_templates.pub")
+  vsphere_network             = "VMs"
+  vm_template_name            = "d2iq-base-Ubuntu-20.04"
+  num_cpus                    = 4
+  memory                      = 8192
+  root_volume_size            = 250
+  resource_pool_name          = var.resource_pool_name
+  vsphere_folder              = var.vsphere_folder
+  datastore_name              = var.datastore_name
+  custom_attribute_owner      = var.custom_attribute_owner
+  custom_attribute_expiration = var.custom_attribute_expiration
+  ssh_user                    = var.ssh_user
+  datastore_is_cluster        = false
 }
 
 output "bastion_default_ip_address" {
@@ -32,20 +31,20 @@ module "dkp-cp" {
   #source = "../modules/vmclone"
   source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
-  node_name       = "sortega-dkp-cp${count.index}"
-  count      = 3
-  ssh_public_key  = file("~/.ssh/d2iq_templates.pub")
-  vsphere_network = "VMs"
-  vm_template_name = "d2iq-base-RHEL-84"
-  num_cpus        = 4
-  memory          = 8192
-  root_volume_size = 40
-  resource_pool_name = "users-support"
-  vsphere_folder     = "users/users-support"
-  datastore_name = "users-support"
-  custom_attribute_owner      = "sortega"
-  custom_attribute_expiration = "24h"
-  ssh_user        = "sortega"
+  node_name                   = "sortega-dkp-cp${count.index}"
+  count                       = 3
+  ssh_public_key              = file("~/.ssh/d2iq_templates.pub")
+  vsphere_network             = "VMs"
+  num_cpus                    = 4
+  memory                      = 8192
+  root_volume_size            = 40
+  vm_template_name            = var.vm_template_name
+  resource_pool_name          = var.resource_pool_name
+  vsphere_folder              = var.vsphere_folder
+  datastore_name              = var.datastore_name
+  custom_attribute_owner      = var.custom_attribute_owner
+  custom_attribute_expiration = var.custom_attribute_expiration
+  ssh_user                    = var.ssh_user
 }
 
 output "dkp-cp_default_ip_address" {
@@ -56,21 +55,21 @@ module "dkp-worker" {
   #source = "../modules/vmclone"
   source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
-  node_name       = "sortega-dkp-worker${count.index}"
-  count      = 4
-  ssh_public_key  = file("~/.ssh/d2iq_templates.pub")
-  vsphere_network = "VMs"
-  vm_template_name = "d2iq-base-RHEL-84"
-  num_cpus        = 8
-  memory          = 16384
-  root_volume_size = 40
-  vsphere_additional_disks = [{"size" : 100, "type" : "thin"}]
-  resource_pool_name = "users-support"
-  vsphere_folder     = "users/users-support"
-  datastore_name = "users-support"
-  custom_attribute_owner      = "sortega"
-  custom_attribute_expiration = "24h"
-  ssh_user        = "sortega"
+  node_name                   = "sortega-dkp-worker${count.index}"
+  count                       = 4
+  ssh_public_key              = file("~/.ssh/d2iq_templates.pub")
+  vsphere_network             = "VMs"
+  num_cpus                    = 8
+  memory                      = 16384
+  root_volume_size            = 40
+  vsphere_additional_disks    = [{"size" : 100, "type" : "thin"}]
+  vm_template_name            = var.vm_template_name
+  resource_pool_name          = var.resource_pool_name
+  vsphere_folder              = var.vsphere_folder
+  datastore_name              = var.datastore_name
+  custom_attribute_owner      = var.custom_attribute_owner
+  custom_attribute_expiration = var.custom_attribute_owner
+  ssh_user                    = var.ssh_user
 }
 
 output "dkp-worker_default_ip_address" {
