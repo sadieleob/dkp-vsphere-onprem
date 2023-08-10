@@ -1,13 +1,20 @@
 module "bastion" {
-  source = "../modules/vmclone"
-  #source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
+  #source = "../modules/vmclone"
+  source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
   node_name      = "kib-ha-proxy"
-  ssh_public_key = file("~/.ssh/id_rsa.pub")
+  ssh_public_key = file("~/.ssh/d2iq_templates.pub")
 
   custom_attribute_owner      = "sortega"
   custom_attribute_expiration = "24h"
-
+  ssh_user        = "sortega"
+  vsphere_network = "VMs"
+  vm_template_name = "d2iq-base-Ubuntu-20.04"
+  num_cpus        = 4
+  memory          = 8192
+  root_volume_size = 250
+  resource_pool_name = "users-support"
+  vsphere_folder     = "users/users-support"
   datastore_name       = "users-support"
   datastore_is_cluster = false
 }
@@ -22,21 +29,23 @@ output "bastion_ssh_nat_address" {
 
 
 module "dkp-cp" {
-  source = "../modules/vmclone"
-  #source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
+  #source = "../modules/vmclone"
+  source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
   node_name       = "sortega-dkp-cp${count.index}"
   count      = 3
-  ssh_public_key  = file("~/.ssh/id_rsa.pub")
+  ssh_public_key  = file("~/.ssh/d2iq_templates.pub")
   vsphere_network = "VMs"
   vm_template_name = "d2iq-base-RHEL-84"
   num_cpus        = 4
   memory          = 8192
   root_volume_size = 40
   resource_pool_name = "users-support"
+  vsphere_folder     = "users/users-support"
   datastore_name = "users-support"
   custom_attribute_owner      = "sortega"
   custom_attribute_expiration = "24h"
+  ssh_user        = "sortega"
 }
 
 output "dkp-cp_default_ip_address" {
@@ -44,12 +53,12 @@ output "dkp-cp_default_ip_address" {
 }
 
 module "dkp-worker" {
-  source = "../modules/vmclone"
-  #source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
+  #source = "../modules/vmclone"
+  source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
   node_name       = "sortega-dkp-worker${count.index}"
   count      = 4
-  ssh_public_key  = file("~/.ssh/id_rsa.pub")
+  ssh_public_key  = file("~/.ssh/d2iq_templates.pub")
   vsphere_network = "VMs"
   vm_template_name = "d2iq-base-RHEL-84"
   num_cpus        = 8
@@ -57,9 +66,11 @@ module "dkp-worker" {
   root_volume_size = 40
   vsphere_additional_disks = [{"size" : 100, "type" : "thin"}]
   resource_pool_name = "users-support"
+  vsphere_folder     = "users/users-support"
   datastore_name = "users-support"
   custom_attribute_owner      = "sortega"
   custom_attribute_expiration = "24h"
+  ssh_user        = "sortega"
 }
 
 output "dkp-worker_default_ip_address" {
