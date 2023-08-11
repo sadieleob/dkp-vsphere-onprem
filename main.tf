@@ -1,6 +1,6 @@
 module "bastion" {
-  #source = "../modules/vmclone"
-  source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
+  source = "../modules/vmclone"
+  #source = "git::git@github.com:mesosphere/vcenter-tools.git//modules/vmclone"
 
   node_name                   = "kib-ha-proxy"
   ssh_public_key              = file("~/.ssh/d2iq_templates.pub")
@@ -16,6 +16,7 @@ module "bastion" {
   custom_attribute_expiration = var.custom_attribute_expiration
   ssh_user                    = var.ssh_user
   datastore_is_cluster        = false
+  #custom_template_cloudinit_config = file("/mnt/extra/mycluster/terraform/d2iq-vsphere/vcenter-tools-kib/modules/vmclone/templates/cloudinit-default.yaml.tftpl")
 }
 
 output "bastion_default_ip_address" {
